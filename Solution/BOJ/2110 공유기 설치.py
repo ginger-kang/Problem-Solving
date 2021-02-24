@@ -1,25 +1,28 @@
-n, c = list(map(int, input().split()))
+import sys
+input = sys.stdin.readline
+
+n, c = map(int, input().split())
 house = []
 for _ in range(n):
-    house.append(int(input()))
-house.sort()
+    data = int(input())
+    house.append(data)
+house = sorted(house)
 
-right = house[-1] - house[0]
-left = house[1] - house[0]
+maxval = house[-1]
+minval = 1
 
-ans = 0
-while left <= right:
-    # 공유기 사이의 거리
-    mid = (left + right) // 2
-    value = house[0]
+result = 0
+while minval <= maxval:
+    mid = (minval + maxval) // 2
+    tmp = house[0]
     count = 1
-    for i in house:
-        if i >= value + mid:
+    for i in range(1, n):
+        if house[i] >= tmp + mid:
             count += 1
-            value = i
+            tmp = house[i]
     if count >= c:
-        left = mid + 1
-        ans = mid
+        minval = mid + 1
+        result = mid
     else:
-        right = mid - 1
-print(ans)
+        maxval = mid - 1
+print(result)
