@@ -1,70 +1,59 @@
 from collections import deque
 
-# 동남서북
-dx = [1, 0, -1, 0] # r
-dy = [0, 1, 0, -1] # c
+dx = [1, 0, -1, 0]
+dy = [0, 1, 0, -1]
 
-def dummy(board, change_dir):
-    snake_head = (1,1)
+def snake():
+    x, y = 1, 1
     direction = 0
     time = 0
-    board[snake_head[0]][snake_head[1]] = 2
-    # (c, r)
     q = deque()
-    q.append(snake_head)
+    q.append([x, y])
+    turn_index = 0
     while True:
-        #print(q, time, direction)
-        nx = snake_head[1] + dx[direction]
-        ny = snake_head[0] + dy[direction]
-        if nx >= 1 and ny >= 1 and nx <= n and ny <= n and board[ny][nx] != 2:
-            # 사과가 없을 경우
-            if board[ny][nx] == 0:
-                snake_head = (ny, nx)
-                board[ny][nx] = 2
-                q.append(snake_head)
-                y,x = q.popleft()
-                board[y][x] = 0
+        nx = x + dx[direction]
+        ny = y + dy[direction]
+        if nx >= 1 and nx <= n and ny >= 1 and ny <= n and not [nx, ny] in q:
             # 사과가 있을 경우
+            if board[ny][nx] == 1:
+                board[ny][nx] = 0
+                q.append([nx, ny])
+            # 사과가 없을 경우
             else:
-                snake_head = (ny, nx)
-                board[ny][nx] = 2
-                q.append(snake_head)
-            time += 1
-            for i in change_dir:
-                if time == i[0]:
-                    direction = turn(direction, i[1])
+                q.append([nx, ny])
+                q.popleft()
         else:
-            print(time+1)
+            time += 1
             break
-        
-def turn(direction, c):
-    if c == 'L':
-        direction = (direction - 1) % 4
+        time += 1
+        x, y = nx, ny
+        if turn_index < l and time == turn[turn_index][0]:
+            direction = rotation_snake(direction, turn[turn_index][1])
+            turn_index += 1
+    return time
+            
+def rotation_snake(direction, turn):
+    if turn == 'D':
+        return (direction + 1) % 4
     else:
-        direction = (direction + 1) % 4
-        
-    return direction
+        return (direction + 3) % 4
 
 n = int(input())
 k = int(input())
+board = [[0] * (n+1) for _ in range(n+1)]
+apples = []
+for _ in range(k):
+    data = list(map(int, input().split()))
+    apples.append(data)
 
-# (c, r)
-apple = []
-for i in range(k):
-    input_data = list(map(int, input().split(' ')))
-    apple.append(input_data)
-    
+for apple in apples:
+    y, x = apple
+    board[y][x] = 1
+
 l = int(input())
+turn = []
+for _ in range(l):
+    x, c = input().split()
+    turn.append((int(x), c))
 
-change_dir = []
-for i in range(l):
-    input_data = input().split(' ')
-    change_dir.append((int(input_data[0]), input_data[1]))
-
-board = [[0 for i in range(n+1)] for i in range(n+1)]
-for i in range(n+1):
-    for j in range(n+1):
-        if [i, j] in apple:
-            board[i][j] = 1
-            
-dummy(board, change_dir)
+print(snake())
