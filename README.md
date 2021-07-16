@@ -1,7 +1,7 @@
 # 👨‍💻 알고리즘 문제풀이
 
-### [BOJ](./BOJ)
+### [BOJ](./Solution/BOJ)
 
-### [Programmers](./Programmers)
+### [Programmers](./Solution/Programmers)
 
-### [LeetCode](./LeetCode)
+### [LeetCode](./Solution/LeetCode)
